@@ -17,6 +17,7 @@ RUN apt-get update && \
     rm "spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" && \
     mv "spark-${SPARK_VERSION}-bin-hadoop2.7" /usr/spark && \
     apt-get remove -y wget && \
+    apt-get autoremove -y && \
     apt-get clean
     
 ENTRYPOINT ["spark-submit"]
