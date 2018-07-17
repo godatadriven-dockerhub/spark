@@ -12,7 +12,7 @@ ENV PATH="/usr/spark/bin:${PATH}"
   
 RUN apt-get update && \
 	apt-get install -y wget && \
-    wget -q "http://apache.cs.uu.nl/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" && \
+    wget -q "http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" && \
     tar xzf "spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" && \
     rm "spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" && \
     mv "spark-${SPARK_VERSION}-bin-hadoop2.7" /usr/spark && \
