@@ -1,0 +1,19 @@
+version: '3.1'
+services:
+    postgres:
+        image: postgres:latest
+        environment:
+            - POSTGRES_USER=spark
+            - POSTGRES_PASSWORD=spark
+            - POSTGRES_DB=metastore
+
+    thrift:
+        build: .
+        command: >
+          --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2
+          --name Thrift JDBC/ODBC Server
+        volumes:
+            - ./thrift/hive-site.xml:/usr/spark/conf/hive-site.xml
+        ports:
+            - "10000:10000"
+            - "4040:4040"
