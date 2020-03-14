@@ -11,7 +11,7 @@ ENV SPARK_HOME /usr/spark
 ENV PATH="/usr/spark/bin:/usr/spark/sbin:${PATH}"
   
 RUN apt-get update && \
-    apt-get install -y wget procps libpostgresql-jdbc-java && \
+    apt-get install -y wget netcat procps libpostgresql-jdbc-java && \
     wget -q "http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" && \
     tar xzf "spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" && \
     rm "spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" && \
@@ -20,6 +20,9 @@ RUN apt-get update && \
     apt-get remove -y wget && \
     apt-get autoremove -y && \
     apt-get clean
-    
-ENTRYPOINT ["spark-submit"]
+
+COPY entrypoint.sh /scripts/
+RUN chmod +x /scripts/entrypoint.sh
+
+ENTRYPOINT ["/scripts/entrypoint.sh"]
 CMD ["--help"]

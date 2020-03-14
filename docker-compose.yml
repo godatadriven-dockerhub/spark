@@ -9,9 +9,13 @@ services:
         image: godatadriven/spark
         entrypoint: spark-class
         command: org.apache.spark.deploy.worker.Worker spark://master:7077
+        environment:
+            - WAIT_FOR=master:7077
 
     driver:
         image: godatadriven/spark
         command: --class org.apache.spark.examples.SparkPi --master spark://master:7077 /usr/spark/examples/jars/spark-examples_2.11-2.2.1.jar 1000
+        environment:
+            - WAIT_FOR=master:7077
         ports:
           - "4040:4040"

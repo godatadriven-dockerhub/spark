@@ -8,7 +8,9 @@ services:
             - POSTGRES_DB=metastore
 
     thrift:
-        build: .
+        image: godatadriven/spark
+        environment:
+            - WAIT_FOR=postgres:5432
         command: >
           --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2
           --name Thrift JDBC/ODBC Server
