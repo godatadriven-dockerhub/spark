@@ -35,7 +35,18 @@ jobs:
             DOCKER_TAG="${{ matrix.DOCKER_TAG }}"
             
             # Manipulate DOCKER_TAG to create build args
-            BUILD_ARGS="SPARK_VERSION=${DOCKER_TAG%%,*}"
+            SPARK_MAJOR_VERSION=${DOCKER_TAG:0:1}
+            if [ ${SPARK_MAJOR_VERSION} = "3" ]; then
+                OPENJDK_VERSION=11
+                HADOOP_VERSION=3.2
+            else
+                OPENJDK_VERSION=8
+                HADOOP_VERSION=2.7
+            fi
+            
+            BUILD_ARGS="OPENJDK_VERSION=${OPENJDK_VERSION}
+                        HADOOP_VERSION=${HADOOP_VERSION}
+                        SPARK_VERSION=${DOCKER_TAG%%,*}"
 
             # No modification needed beyond this point
             BUILD_ARGS="${BUILD_ARGS//'%'/'%25'}"
