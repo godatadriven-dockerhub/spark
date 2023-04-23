@@ -36,7 +36,11 @@ jobs:
             
             # Manipulate DOCKER_TAG to create build args
             SPARK_MAJOR_VERSION=${DOCKER_TAG:0:1}
-            if [ ${SPARK_MAJOR_VERSION} = "3" ]; then
+            SPARK_MAJOR_MINOR_VERSION=${DOCKER_TAG:0:3}
+            if [[ ${SPARK_MAJOR_MINOR_VERSION} = "3.3" || ${DOCKER_TAG} == "latest" ]]; then
+                OPENJDK_VERSION=11
+                HADOOP_VERSION=3
+            elif [ ${SPARK_MAJOR_VERSION} = "3" ]; then
                 OPENJDK_VERSION=11
                 HADOOP_VERSION=3.2
             else
