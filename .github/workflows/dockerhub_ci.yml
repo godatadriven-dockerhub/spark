@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         # Specify which tags to build
-        DOCKER_TAG: ["3.1.1,3.1,latest", "3.0.2,3.0", "2.4.5,2.4"]
+        DOCKER_TAG: ["3.3.2,3.3,latest", "3.1.1,3.1", "3.0.2,3.0", "2.4.5,2.4"]
 
     timeout-minutes: 30
     steps:
@@ -36,7 +36,11 @@ jobs:
             
             # Manipulate DOCKER_TAG to create build args
             SPARK_MAJOR_VERSION=${DOCKER_TAG:0:1}
-            if [ ${SPARK_MAJOR_VERSION} = "3" ]; then
+            SPARK_MAJOR_MINOR_VERSION=${DOCKER_TAG:0:3}
+            if [[ ${SPARK_MAJOR_MINOR_VERSION} = "3.3" || ${DOCKER_TAG} == "latest" ]]; then
+                OPENJDK_VERSION=11
+                HADOOP_VERSION=3
+            elif [ ${SPARK_MAJOR_VERSION} = "3" ]; then
                 OPENJDK_VERSION=11
                 HADOOP_VERSION=3.2
             else
