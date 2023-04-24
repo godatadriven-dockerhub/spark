@@ -1,6 +1,6 @@
 # Apache Spark in Docker
 
-Spark docker container based on OpenJDK 8 
+Spark docker container based on OpenJDK 8/11
 
 [![](https://images.microbadger.com/badges/image/godatadriven/spark.svg)](https://microbadger.com/images/godatadriven/spark "Get your own image badge on microbadger.com")[![](https://images.microbadger.com/badges/version/godatadriven/spark.svg)](https://microbadger.com/images/godatadriven/spark "Get your own version badge on microbadger.com") 
 

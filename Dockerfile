@@ -2,8 +2,8 @@ ARG OPENJDK_VERSION=8
 FROM openjdk:${OPENJDK_VERSION}-jre-slim
 
 ARG BUILD_DATE
-ARG SPARK_VERSION=3.1.1
-ARG HADOOP_VERSION=3.2
+ARG SPARK_VERSION=3.3.2
+ARG HADOOP_VERSION=3
 
 LABEL org.label-schema.name="Apache Spark ${SPARK_VERSION}" \
       org.label-schema.build-date=$BUILD_DATE \
