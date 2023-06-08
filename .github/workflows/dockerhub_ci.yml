@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         # Specify which tags to build
-        DOCKER_TAG: ["3.3.2,3.3,latest", "3.1.1,3.1", "3.0.2,3.0", "2.4.5,2.4"]
+        DOCKER_TAG: ["3.4.0,3.4,latest", "3.3.2,3.3", "3.1.3,3.1", "3.0.3,3.0", "2.4.8,2.4"]
 
     timeout-minutes: 30
     steps:
@@ -37,7 +37,7 @@ jobs:
             # Manipulate DOCKER_TAG to create build args
             SPARK_MAJOR_VERSION=${DOCKER_TAG:0:1}
             SPARK_MAJOR_MINOR_VERSION=${DOCKER_TAG:0:3}
-            if [[ ${SPARK_MAJOR_MINOR_VERSION} = "3.3" || ${DOCKER_TAG} == "latest" ]]; then
+            if [[ ${SPARK_MAJOR_MINOR_VERSION} = "3.3" || ${SPARK_MAJOR_MINOR_VERSION} = "3.4" || ${DOCKER_TAG} == "latest" ]]; then
                 OPENJDK_VERSION=11
                 HADOOP_VERSION=3
             elif [ ${SPARK_MAJOR_VERSION} = "3" ]; then
@@ -72,11 +72,12 @@ jobs:
             echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
       - name: Build image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
          context: .
          file: ./Dockerfile
          push: false
+         load: true
          tags: ${{ steps.prep.outputs.tags }}
          build-args: |
            ${{ steps.args.outputs.build_args }}
@@ -102,9 +103,21 @@ jobs:
           password: ${{ secrets.DOCKERHUB }}
 
       - name: Push image
+        # Build and push because of multi platform build
         if: github.ref == 'refs/heads/master'
-        run: |
-            docker push --all-tags $DOCKER_REPO
+        uses: docker/build-push-action@v4
+        with:
+         context: .
+         file: ./Dockerfile
+         push: true
+         tags: ${{ steps.prep.outputs.tags }}
+         build-args: |
+           ${{ steps.args.outputs.build_args }}
+         labels: |
+           org.opencontainers.image.source=${{ github.event.repository.clone_url }}
+           org.opencontainers.image.created=${{ steps.prep.outputs.created }}
+           org.opencontainers.image.revision=${{ github.sha }}
+         platforms: linux/amd64,linux/arm/v8,linux/arm64
 
       - name: Report Status
         if: always() && github.ref == 'refs/heads/master'
