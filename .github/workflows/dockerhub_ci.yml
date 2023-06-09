@@ -116,6 +116,8 @@ jobs:
          context: .
          file: ./Dockerfile
          push: true
+         provenance: false
+         sbom: false
          tags: ${{ steps.prep.outputs.tags }}
          build-args: |
            ${{ steps.args.outputs.build_args }}
