@@ -98,19 +98,18 @@ jobs:
            SPARK_VERSION=${{ matrix.image.SPARK_VERSION }}
          labels: ${{ steps.meta.outputs.labels }}
          annotations: ${{ steps.meta.outputs.annotations }}
-         # https://docs.docker.com/build/ci/github-actions/share-image-jobs/
-         outputs: type=docker,dest=/tmp/gdd-spark-${{ matrix.image.SPARK_VERSION }}.tar
 
       - name: Test image
-        env:
-            IMAGE_NAME: "godatadriven/spark:${{ matrix.image.SPARK_VERSION }}"
         run: |
-            docker load --input /tmp/gdd-spark-${{ matrix.image.SPARK_VERSION }}.tar
-            docker image ls -a
-            if [[ -f "docker-compose.test.yml" ]]; then
-                docker compose --file docker-compose.test.yml build --builder ${{ steps.setup-buildx.outputs.name }}
-                docker compose --file docker-compose.test.yml run sut
-            fi
+          IMAGE_NAME="godatadriven/spark:${{ matrix.image.SPARK_VERSION }}"
+          TEST_IMAGE_NAME="spark-image-tests:${{ matrix.image.SPARK_VERSION }}"
+          docker build \
+            --file tests/Dockerfile \
+            --build-arg IMAGE_NAME="${IMAGE_NAME}" \
+            --tag "${TEST_IMAGE_NAME}" \
+            ./tests/
+
+          docker run --rm "${TEST_IMAGE_NAME}"
 
       - name: Login to DockerHub
         if: github.ref == 'refs/heads/master'
