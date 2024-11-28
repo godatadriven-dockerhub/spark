@@ -66,19 +66,19 @@ jobs:
             BUILD_ARGS="${BUILD_ARGS//$'\n'/'%0A'}"
             BUILD_ARGS="${BUILD_ARGS//$'\r'/'%0D'}"
 
-            echo "::set-output name=build_args::$BUILD_ARGS"
+            echo "build_args=${BUILD_ARGS}" >> $GITHUB_OUTPUT
 
       - name: Prepare
         id: prep
         run: |
             DOCKER_TAG="${{ matrix.DOCKER_TAG }}"
             DOCKER_IMAGE_NAME="$DOCKER_REPO:${DOCKER_TAG%%,*}"
-            echo ::set-output name=image_name::${DOCKER_IMAGE_NAME}
+            echo "image_name=${DOCKER_IMAGE_NAME}" >> $GITHUB_OUTPUT
             
             TAGS="$DOCKER_REPO:${DOCKER_TAG//,/,$DOCKER_REPO:}"
-            echo ::set-output name=tags::${TAGS}
+            echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
-            echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+            echo "created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
