@@ -78,10 +78,9 @@ jobs:
             type=semver,pattern={{version}},value=${{ matrix.image.SPARK_VERSION }}
             type=semver,pattern={{major}}.{{minor}},value=${{ matrix.image.SPARK_VERSION }}
           labels: |
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.vendor=Xebia Data, https://xebia.com/
-            org.opencontainers.image.description=An Apache Spark Docker image.
+          annotations: |
+            org.opencontainers.image.vendor=Xebia Data, https://xebia.com/
 
       - name: Build image
         id: docker-build
